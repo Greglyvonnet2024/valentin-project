@@ -18,8 +18,7 @@
   <div id="intro" class="intro">
     <div class="envelope" id="openEnvelope" role="button" tabindex="0" aria-label="Ouvrir l’enveloppe">
       <div class="env-back">
-        <!-- Prénom ici -->
-        <div class="recipient">Anaïs</div>
+        <div class="recipient">Pour Anaïs</div>
       </div>
 
       <div class="env-flap"></div>
@@ -32,7 +31,7 @@
     <div id="petals" aria-hidden="true"></div>
 
     <div class="content" id="contentBox">
-      <h1 id="questionTitle">Veux-tu être ma Valentine ?</h1>
+      <h1 id="questionTitle">Voulez-vous être ma Valentine ?</h1>
 
       <div class="buttons" id="buttonsRow">
         <button id="yesBtn" class="btn yes" type="button">Oui</button>
@@ -42,17 +41,23 @@
       <!-- SUCCESS -->
       <div id="success" class="success hidden">
         <div class="successTitle">Félicitations ✨</div>
-        <div class="successSub">Vous avez choisi votre prince charmant</div>
+        <div class="successSub">Votre amoureux est en route pour vous couvrir d'amour et de baisers🎁💘</div>
       </div>
     </div>
 
-    <!-- OVERLAY IMAGE -->
+    <!-- OVERLAY IMAGE + TEXTE -->
     <div id="warningOverlay" class="overlay hidden" aria-hidden="true">
       <div class="overlayCard">
         <img src="assets/img/chatonfusil.png" alt="Chat" />
+        <p class="overlayText">Tu es sûr de toi ? 😼</p>
       </div>
     </div>
   </div>
+
+  <!-- MUSIQUE (ajoute ton mp3 ici) -->
+  <audio id="bgMusic" loop>
+    <source src="assets/audio/musique.mp3" type="audio/mpeg">
+  </audio>
 
   <script src="script.js"></script>
 </body>

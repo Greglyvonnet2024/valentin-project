@@ -10,15 +10,17 @@ const noBtn = document.getElementById("noBtn");
 const success = document.getElementById("success");
 const questionTitle = document.getElementById("questionTitle");
 const buttonsRow = document.getElementById("buttonsRow");
-const contentBox = document.getElementById("contentBox");
-
-// Overlay image
 const warningOverlay = document.getElementById("warningOverlay");
+const bgMusic = document.getElementById("bgMusic");
+const contentBox = document.querySelector(".content");
+
+let attempts = 0;
+let overlayTimer = null;
 
 success.classList.add("hidden");
 warningOverlay.classList.add("hidden");
 
-// --- Petals ---
+// ---------------- PETALS ----------------
 function spawnPetal() {
   const petal = document.createElement("div");
   petal.className = "petal";
@@ -37,21 +39,26 @@ function spawnPetal() {
 }
 setInterval(spawnPetal, 180);
 
-// --- Open envelope ---
+// ---------------- OPEN ENVELOPE ----------------
 function openEnvelope() {
   envelope.classList.add("open");
-  setTimeout(() => intro.classList.add("fadeout"), 650);
+
+  setTimeout(() => intro.classList.add("fadeout"), 600);
+
   setTimeout(() => {
     intro.style.display = "none";
     app.classList.remove("hidden");
+
+    if (bgMusic) {
+      bgMusic.volume = 0.5;
+      bgMusic.play().catch(() => {});
+    }
   }, 1100);
 }
-envelope.addEventListener("click", openEnvelope);
-envelope.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") openEnvelope();
-});
 
-// --- Oui ---
+envelope.addEventListener("click", openEnvelope);
+
+// ---------------- YES ----------------
 yesBtn.addEventListener("click", () => {
   questionTitle.classList.add("hidden");
   buttonsRow.classList.add("hidden");
@@ -59,112 +66,77 @@ yesBtn.addEventListener("click", () => {
   success.classList.remove("hidden");
 });
 
-// --- Non ---
-let attempts = 0;
-let overlayTimer = null;
+// ---------------- NON ----------------
 
-// remet le bouton Non à sa place normale
 function resetNoButton() {
   noBtn.style.position = "";
   noBtn.style.left = "";
   noBtn.style.top = "";
-  noBtn.style.transform = "";
 }
 
-// affiche l’image 3s puis remet l’écran comme avant
+// Overlay image 3s puis retour normal
 function showOverlayThenRestore() {
+
   questionTitle.classList.add("hidden");
   buttonsRow.classList.add("hidden");
-
   warningOverlay.classList.remove("hidden");
 
   if (overlayTimer) clearTimeout(overlayTimer);
+
   overlayTimer = setTimeout(() => {
     warningOverlay.classList.add("hidden");
     questionTitle.classList.remove("hidden");
     buttonsRow.classList.remove("hidden");
-
     resetNoButton();
     attempts = 0;
   }, 3000);
 }
 
-// Choisit une position ALÉATOIRE dans une zone "safe" autour de la carte centrale
-function moveNoButtonInSafeArea() {
-  // si success affiché, on ne bouge plus
-  if (!success.classList.contains("hidden")) return;
+// Mouvement STRICTEMENT dans la carte blanche
+function moveNoButtonSafe() {
 
-  const paddingViewport = 12; // marge avec les bords de l'écran
-  const safeMargin = 80;      // distance autour de la carte où il a le droit d'aller (augmente si tu veux plus loin)
-
-  const vw = document.documentElement.clientWidth;
-  const vh = document.documentElement.clientHeight;
+  const rect = contentBox.getBoundingClientRect();
 
   const btnW = noBtn.offsetWidth;
   const btnH = noBtn.offsetHeight;
 
-  // rectangle de la carte
-  const box = contentBox.getBoundingClientRect();
+  const padding = 15;
 
-  // zone autorisée (autour de la carte)
-  let minX = box.left - safeMargin;
-  let maxX = box.right + safeMargin - btnW;
-  let minY = box.top - safeMargin;
-  let maxY = box.bottom + safeMargin - btnH;
+  const maxX = rect.width - btnW - padding;
+  const maxY = rect.height - btnH - padding;
 
-  // clamp dans le viewport
-  minX = Math.max(paddingViewport, minX);
-  minY = Math.max(paddingViewport, minY);
-  maxX = Math.min(vw - btnW - paddingViewport, maxX);
-  maxY = Math.min(vh - btnH - paddingViewport, maxY);
+  let x, y;
+  let tries = 0;
 
-  // sécurité si écran minuscule
-  if (maxX < minX) maxX = minX;
-  if (maxY < minY) maxY = minY;
-
-  // position actuelle
   const current = noBtn.getBoundingClientRect();
-  const curX = current.left;
-  const curY = current.top;
+  const curX = current.left - rect.left;
+  const curY = current.top - rect.top;
 
-  let x = curX;
-  let y = curY;
+  do {
+    x = Math.random() * maxX;
+    y = Math.random() * maxY;
+    tries++;
+  } while (Math.hypot(x - curX, y - curY) < 120 && tries < 12);
 
-  // on essaye plusieurs fois pour "bouger vraiment" sans sortir
-  for (let i = 0; i < 12; i++) {
-    const cx = Math.floor(minX + Math.random() * (maxX - minX));
-    const cy = Math.floor(minY + Math.random() * (maxY - minY));
-    const dist = Math.hypot(cx - curX, cy - curY);
-
-    // distance minimale acceptable (ajuste si tu veux)
-    if (dist > 140 || i === 11) {
-      x = cx; y = cy;
-      break;
-    }
-  }
-
-  // placement dans le viewport
-  noBtn.style.position = "fixed";
+  noBtn.style.position = "absolute";
   noBtn.style.left = `${x}px`;
   noBtn.style.top = `${y}px`;
-  noBtn.style.transform = "translateZ(0)";
 }
 
-function handleNoAttempt(e) {
+function handleNoClick(e) {
   e.preventDefault();
+
+  if (!success.classList.contains("hidden")) return;
 
   attempts++;
 
-  // à chaque tentative : il bouge MAIS reste dans une zone visible
-  moveNoButtonInSafeArea();
+  moveNoButtonSafe();
 
-  // à 3 tentatives : image apparaît
   if (attempts >= 3) {
     showOverlayThenRestore();
   }
 }
 
-// déclenchement sur tentative réelle de clic/tap
-noBtn.addEventListener("mousedown", handleNoAttempt);
-noBtn.addEventListener("touchstart", handleNoAttempt, { passive: false });
-noBtn.addEventListener("click", handleNoAttempt);
+noBtn.addEventListener("mousedown", handleNoClick);
+noBtn.addEventListener("touchstart", handleNoClick, { passive: false });
+noBtn.addEventListener("click", handleNoClick);
