@@ -1,0 +1,209 @@
+*{ box-sizing:border-box; }
+
+html, body{
+  height:100%;
+  margin:0;
+}
+
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow:hidden;
+  background:#fff;
+}
+
+.hidden{ display:none !important; }
+
+/* ---------- INTRO ---------- */
+.intro{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+  background: radial-gradient(circle at 30% 30%, #fff, #ffd3e6);
+  z-index:10;
+}
+
+.envelope{
+  position:relative;
+  width:480px;  /* plus long */
+  height:250px; /* même hauteur */
+  cursor:pointer;
+  transition: transform .25s ease;
+}
+.envelope:hover{ transform: translateY(-8px); }
+
+.env-back{
+  position:absolute;
+  inset:0;
+  background:#ffb7d5;
+  border-radius:18px;
+  box-shadow:0 18px 50px rgba(0,0,0,.15);
+}
+
+/* Sceau doré */
+.seal{
+  position:absolute;
+  left:50%;
+  top:110px;
+  transform: translateX(-50%);
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:26px;
+  background: radial-gradient(circle at 30% 30%, #fff2b6, #d8a800);
+  box-shadow:0 10px 20px rgba(0,0,0,.18);
+  z-index:2;
+}
+
+/* Prénom sous le sceau (donc visible) */
+.recipient{
+  position:absolute;
+  left:50%;
+  top: 178px; /* <-- sous le sceau */
+  transform:translateX(-50%);
+  font-family: "Great Vibes", cursive;
+  font-size: 52px;
+  font-weight: 400;
+  color:#7a0f3a;
+  text-shadow: 0 2px 10px rgba(0,0,0,.08);
+  z-index:1;
+  white-space: nowrap;
+}
+
+/* rabat */
+.env-flap{
+  position:absolute;
+  left:0; right:0;
+  top:0;
+  height:140px;
+  background:#ff9fc7;
+  border-radius:18px 18px 16px 16px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  transition: transform .7s ease;
+}
+
+.envelope.open .env-flap{ transform: rotateX(160deg); }
+
+.intro.fadeout{ animation: fadeOut .55s ease forwards; }
+@keyframes fadeOut{ to{ opacity:0; transform: scale(1.02); pointer-events:none; } }
+
+/* ---------- APP ---------- */
+.app{
+  position:fixed;
+  inset:0;
+  background: linear-gradient(#ffd7e6, #fff);
+}
+
+/* pétales */
+#petals{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.petal{
+  position:absolute;
+  width:12px;
+  height:10px;
+  background: rgba(255, 160, 200, .9);
+  border-radius: 80% 20% 80% 20%;
+  opacity:.9;
+  animation: fall linear forwards;
+}
+@keyframes fall{
+  from{ transform: translate3d(var(--xStart), -20px, 0) rotate(0deg); }
+  to{ transform: translate3d(var(--xEnd), 110vh, 0) rotate(720deg); }
+}
+
+.content{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, -50%);
+  width:min(560px, calc(100% - 32px));
+  text-align:center;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(8px);
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.12);
+}
+
+#questionTitle{
+  margin:0 0 18px;
+  font-family: "Great Vibes", cursive;
+  font-size: 56px;
+  font-weight: 400;
+  color:#6b1030;
+  line-height: 1.05;
+  text-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:0;
+  padding:12px 22px;
+  font-size:18px;
+  border-radius:14px;
+  cursor:pointer;
+}
+.yes{ background:#22c55e; color:#fff; }
+.no{ background:#ef4444; color:#fff; }
+
+/* SUCCESS */
+.success{
+  margin-top: 18px;
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);
+}
+.successTitle{
+  font-family: "Great Vibes", cursive;
+  font-size: 62px;
+  font-weight: 400;
+  color: #6b1030;
+  line-height: 1;
+}
+.successSub{
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ---------- OVERLAY IMAGE ---------- */
+.overlay{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+  background: rgba(0,0,0,.25);
+  z-index: 20;
+}
+
+.overlayCard{
+  width:min(700px, calc(100% - 32px)); /* plus grand */
+  border-radius: 22px;
+  overflow:hidden;
+  box-shadow: 0 25px 70px rgba(0,0,0,.25);
+  background: rgba(255,255,255,.9);
+}
+
+.overlayCard img{
+  width: 100%;
+  height: auto;
+  max-height: 75vh;
+  object-fit: contain;
+  display:block;
+}

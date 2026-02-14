@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pour toi 💖</title>
+
+  <!-- Police manuscrite romantique -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- INTRO ENVELOPPE -->
+  <div id="intro" class="intro">
+    <div class="envelope" id="openEnvelope" role="button" tabindex="0" aria-label="Ouvrir l’enveloppe">
+      <div class="env-back">
+        <!-- Prénom ici -->
+        <div class="recipient">Anaïs</div>
+      </div>
+
+      <div class="env-flap"></div>
+      <div class="seal" aria-hidden="true">❤</div>
+    </div>
+  </div>
+
+  <!-- PAGE PRINCIPALE -->
+  <div id="app" class="app hidden">
+    <div id="petals" aria-hidden="true"></div>
+
+    <div class="content" id="contentBox">
+      <h1 id="questionTitle">Veux-tu être ma Valentine ?</h1>
+
+      <div class="buttons" id="buttonsRow">
+        <button id="yesBtn" class="btn yes" type="button">Oui</button>
+        <button id="noBtn" class="btn no" type="button">Non</button>
+      </div>
+
+      <!-- SUCCESS -->
+      <div id="success" class="success hidden">
+        <div class="successTitle">Félicitations ✨</div>
+        <div class="successSub">Vous avez choisi votre prince charmant</div>
+      </div>
+    </div>
+
+    <!-- OVERLAY IMAGE -->
+    <div id="warningOverlay" class="overlay hidden" aria-hidden="true">
+      <div class="overlayCard">
+        <img src="assets/img/chatonfusil.png" alt="Chat" />
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
